@@ -1,0 +1,51 @@
+@startuml R04_Facade
+title R4 — Entrada única de circulação (Facade)
+skinparam classAttributeIconSize 0
+hide empty members
+class "Main (CLI)" as C50627656 <<interface>> {
+}
+class "TratadorDeEmprestimo" as C3381721 <<Client>> {
+  f1–f4()
+}
+class "TratadorDeDevolucao" as C449640 <<Client>> {
+  f5, f6, inspeção()
+}
+class "FachadaDeCirculacao" as C22171723 <<Facade>> {
+  - uow : UnidadeDeTrabalho
+  + solicitarReserva(idLivro, matricula) : ComprovanteDeReserva
+  + consultarReserva(idLivro, matricula)
+  + efetivarEmprestimo(idLivro, matricula) : ComprovanteDeEmprestimo
+  + renovarEmprestimo(idLivro, matricula) : ComprovanteDeRenovacao
+  + registrarDevolucao(idLivro, matricula, idAtendente) : ComprovanteDeDevolucao
+  + inspecionar / enviarParaReparo / retornarDoReparo / avaliarReparo()
+}
+class "Relacionamento" as C92594914 <<subsistema>> {
+}
+class "Movimentacao" as C6473029 <<subsistema>> {
+}
+class "Acervo" as C4914906 <<subsistema>> {
+}
+class "Livro" as C4093376 <<subsistema>> {
+}
+interface "UnidadeDeTrabalho" as C38220843 {
+  + executar(operacao)
+}
+class "PublicadorDeDevolucao" as C32637243 {
+  + publicar(evento)
+}
+class "ComprovanteDeEmprestimo" as C56917020 <<record>> {
+  idEmprestimo, idLivro, tituloLivro,
+  matricula, data, dataVencimento
+}
+C50627656 ..> C3381721
+C50627656 ..> C449640
+C3381721 ..> C22171723
+C449640 ..> C22171723
+C22171723 --> C92594914
+C22171723 --> C6473029
+C22171723 --> C4914906
+C22171723 ..> C4093376
+C22171723 --> C38220843
+C22171723 --> C32637243
+C22171723 ..> C56917020 : devolve
+@enduml

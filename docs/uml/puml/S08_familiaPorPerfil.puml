@@ -1,0 +1,17 @@
+@startuml S08_familiaPorPerfil
+title R8 — Família escolhida pelo perfil (Abstract Factory)
+autonumber
+participant "Main" as P0
+participant "Sistema" as P1
+participant "SelecaoDeFabrica" as P2
+participant "FabricaMySQL" as P3
+participant "UnidadeDeTrabalhoMySQL" as P4
+participant "RepositorioDeLivrosMySQL" as P5
+P0 -> P1 : new Sistema(opcoes{perfil = PRODUCAO})
+P1 -> P2 : para(PRODUCAO, mysql)
+P2 -> P3 : new FabricaMySQL(config)
+P3 -> P4 : new (sem abrir conexão)
+P1 -> P3 : criarRepositorioDeLivros()
+P3 -> P5 : new(uow)
+note across: Movimentacao e Relacionamento recebem a MESMA uow
+@enduml

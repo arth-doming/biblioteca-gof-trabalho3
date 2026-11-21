@@ -1,0 +1,23 @@
+@startuml S05_devolucaoAtrasada
+title R5 — Devolução atrasada notifica ouvintes (Observer)
+autonumber
+actor "Atendente" as P0
+participant "TratadorDeDevolucao" as P1
+participant "FachadaDeCirculacao" as P2
+participant "PublicadorDeDevolucao" as P3
+participant "OuvinteDeInspecao" as P4
+participant "OuvinteDeMulta" as P5
+participant "OuvinteDeIndicadores" as P6
+participant "OuvinteDeEmail" as P7
+P0 -> P1 : registrarDevolucao(idLivro, matricula, idAtendente)
+P1 -> P2 : registrarDevolucao(...)
+note across: transação: Livro → DEVOLVIDO, adicionar(devolucao), remover(emprestimo), commit
+P2 -> P3 : publicar(EventoDevolucao)
+P3 -> P4 : aoDevolver(e)  → fila de inspeção
+P3 -> P5 : aoDevolver(e)  → emitirMulta (atraso)
+P3 -> P6 : aoDevolver(e)
+P3 -> P7 : aoDevolver(e)
+P7 --> P3 : exceção capturada (os demais já rodaram)
+P3 --> P2 : ResultadoDaPublicacao
+P2 --> P0 : ComprovanteDeDevolucao (livro DEVOLVIDO)
+@enduml

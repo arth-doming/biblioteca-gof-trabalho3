@@ -1,0 +1,18 @@
+@startuml S02_multaPorPolitica
+title R2 — Cálculo da multa pela política vigente (Strategy)
+autonumber
+participant "OuvinteDeMulta" as P0
+participant "TratadorDeMulta" as P1
+participant "ConfiguracaoAdministrativa" as P2
+participant "PoliticaComTolerancia" as P3
+participant "ContratoDeCobranca" as P4
+P0 -> P1 : emitirMulta(idLivro, matricula, vencimento, devolucao)
+P1 -> P1 : diasDeAtraso() = 5
+P1 -> P2 : politicaVigente()
+P2 --> P1 : PoliticaComTolerancia
+P1 -> P3 : calcular(5)
+P3 --> P1 : 3.00
+P1 -> P1 : new Multa(valor=3.00, politicaAplicada=COM_TOLERANCIA)
+P1 -> P4 : registrarCobranca(solicitacao)
+P4 --> P1 : Boleto
+@enduml

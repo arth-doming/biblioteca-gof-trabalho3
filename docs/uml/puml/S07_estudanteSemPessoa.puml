@@ -1,0 +1,16 @@
+@startuml S07_estudanteSemPessoa
+title R7 — Inclusão de estudante (Template Method)
+autonumber
+actor "Administrador" as P0
+participant "TratadorDeEstudante" as P1
+participant "CadastroDeEstudante" as P2
+participant "Relacionamento" as P3
+P0 -> P1 : inserirEstudante(cpf, matricula)
+P1 -> P2 : incluir(dados)  {final}
+P2 -> P3 : consultarEstudante(matricula)  [buscarExistente]
+note across: se existir: apresentar(existente, false) e encerra
+P2 -> P2 : validar(dados)
+P2 -> P3 : consultarPessoa(cpf)  [verificarPreRequisitos]
+P3 --> P2 : vazio
+P2 --> P0 : PreRequisitoNaoAtendidoException — criar/armazenar não rodam
+@enduml

@@ -1,0 +1,19 @@
+@startuml S10_contarEMover
+title R10 — Contagem e movimentação na árvore (Composite)
+autonumber
+participant "Cliente" as P0
+participant "unidade:GrupoAcervo" as P1
+participant "exatas:GrupoAcervo" as P2
+participant "humanas:GrupoAcervo" as P3
+participant "OrganizacaoDoAcervo" as P4
+P0 -> P1 : contarLivros()
+P1 -> P2 : contarLivros()
+P2 --> P1 : 3 (soma de ItemAcervo)
+P1 -> P3 : contarLivros()
+P3 --> P1 : 2
+P1 --> P0 : 5
+P0 -> P4 : moverLivro(idLivro, humanas)
+P4 -> P2 : remover(item)
+P4 -> P3 : adicionar(item)
+note across: Livro e Movimentacao não são tocados: o item guarda só o idLivro
+@enduml

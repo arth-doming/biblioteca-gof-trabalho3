@@ -1,0 +1,29 @@
+@startuml R01_MaquinaDeEstados
+title T02-1 Estados do Livro — alinhada ao padrão State
+hide empty description
+state LIVRE
+state RESERVADO
+state EMPRESTADO
+state RENOVADO
+RENOVADO : entry / estenderVencimento(30 dias)
+state DEVOLVIDO
+DEVOLVIDO : entry / registrarDataDevolucao
+state REPARANDO
+REPARANDO : do / reparar exemplar
+state INCINERADO
+INCINERADO : entry / registrarIncineracao
+[*] --> LIVRE : T1 / inserirLivro\n<i>construtor Livro()</i>
+LIVRE --> RESERVADO : T2 solicitarReserva [estudante cadastrado]\n<i>Livre.solicitarReserva</i>
+RESERVADO --> EMPRESTADO : T3 efetivarEmprestimo [reserva do mesmo estudante]\n<i>Reservado.efetivarEmprestimo</i>
+EMPRESTADO --> RENOVADO : T4 renovarEmprestimo [numRenovacoes = 0]\n<i>Emprestado.renovarEmprestimo</i>
+RENOVADO --> RENOVADO : T5 renovarEmprestimo [numRenovacoes < 2]\n<i>Renovado.renovarEmprestimo</i>
+EMPRESTADO --> DEVOLVIDO : T6 registrarDevolucao / publicarEventoDevolucao\n<i>Emprestado.registrarDevolucao; multa: OuvinteDeMulta se houver atraso</i>
+RENOVADO --> DEVOLVIDO : T6 registrarDevolucao / publicarEventoDevolucao\n<i>Renovado.registrarDevolucao; multa: OuvinteDeMulta se houver atraso</i>
+DEVOLVIDO --> LIVRE : T7 inspecionar [bom estado]\n<i>Devolvido.inspecionar</i>
+DEVOLVIDO --> REPARANDO : T8 inspecionar [danificado]\n<i>Devolvido.inspecionar</i>
+LIVRE --> REPARANDO : T9 enviarParaReparo [dano no acervo]\n<i>Livre.enviarParaReparo</i>
+REPARANDO --> LIVRE : T10 retornarDoReparo\n<i>Reparando.retornarDoReparo</i>
+REPARANDO --> INCINERADO : avaliarReparo [laudo irrecuperável]\n<i>Reparando.avaliarReparo</i>
+LIVRE --> [*] : T11 excluirLivro\n<i>Livre.excluirLivro</i>
+INCINERADO --> [*] : T11 excluirLivro\n<i>Incinerado.excluirLivro</i>
+@enduml

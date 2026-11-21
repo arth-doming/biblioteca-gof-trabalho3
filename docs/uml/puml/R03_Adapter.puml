@@ -1,0 +1,52 @@
+@startuml R03_Adapter
+title R3 — Bancos incompatíveis (Adapter)
+skinparam classAttributeIconSize 0
+hide empty members
+class "TratadorDeMulta" as C63316868 <<Client>> {
+  + emitirMulta(...)
+  + registrarQuitacao(notificacao) : boolean
+}
+interface "ContratoDeCobranca" as C9059735 <<Target>> {
+  + registrarCobranca(SolicitacaoDeCobranca) : Boleto
+  + aoReceberPagamento(Consumer<NotificacaoDePagamento>)
+  + banco() : String
+}
+class "AdaptadorBancoA" as C79311691 <<Adapter>> {
+  - documentoPorNossoNumero : Map
+  + registrarCobranca(s) : reais→centavos, CPF→dígitos, data→AAAAMMDD
+  - traduzir(AvisoDeLiquidacao)
+}
+class "AdaptadorBancoB" as C93861214 <<Adapter>> {
+  - documentoPorIdBoleto : Map
+  + registrarCobranca(s) : 7.00→"7,00", CPF formatado, data ISO
+  - traduzir(EventoDePagamento)
+}
+class "BancoA" as C52675443 <<Adaptee>> {
+  + incluirTitulo(centavos, documento, AAAAMMDD) : nossoNumero
+  + cadastrarWebhook(Consumer<AvisoDeLiquidacao>)
+}
+class "BancoB" as C2839479 <<Adaptee>> {
+  + emitirBoleto(PedidoDeBoleto) : RespostaDeBoleto
+  + assinarEventos(Consumer<EventoDePagamento>)
+}
+class "SolicitacaoDeCobranca" as C75178212 <<record>> {
+  numeroDocumento, valor : BigDecimal,
+  cpfPagador, nomePagador, vencimento
+}
+class "NotificacaoDePagamento" as C50114959 <<record>> {
+  numeroDocumento, valorPago,
+  situacao : SituacaoDoPagamento, dataPagamento
+}
+class "Sistema" as C12067523 <<raiz de composição>> {
+  escolhe o adaptador pela opção 'banco'()
+}
+C63316868 --> C9059735 : cobranca
+C79311691 ..|> C9059735
+C93861214 ..|> C9059735
+C79311691 --> C52675443
+C93861214 --> C2839479
+C9059735 ..> C75178212
+C9059735 ..> C50114959
+C12067523 ..> C79311691 : cria
+C12067523 ..> C93861214 : cria
+@enduml

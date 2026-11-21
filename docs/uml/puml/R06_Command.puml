@@ -1,0 +1,46 @@
+@startuml R06_Command
+title R6 — Solicitações de circulação como objetos (Command)
+skinparam classAttributeIconSize 0
+hide empty members
+class "Main (CLI)" as C50627656 <<Client (tela)>> {
+  cria a solicitação com id próprio()
+}
+class "TratadorDeEmprestimo" as C3381721 {
+  + submeter(solicitacao) : R
+  + solicitarReserva(idLivro, matricula)
+  + renovarEmprestimo(idLivro, matricula)
+}
+class "ExecutorDeSolicitacoes" as C97194156 <<Invoker>> {
+  - executadas : ConcurrentHashMap<String, FutureTask>
+  + executar(solicitacao) : R
+  + jaExecutada(id) : boolean
+}
+abstract class "SolicitacaoDeCirculacao<R>" as C62212414 <<Command>> {
+  - id : String
+  - autor : String
+  - criadaEm : Instant
+  + executar(receptor) : R
+}
+class "SolicitacaoReserva" as C56233184 <<ConcreteCommand>> {
+  - idLivro
+  - matricula
+  + executar(receptor) : ComprovanteDeReserva
+}
+class "SolicitacaoRenovacao" as C10746004 <<ConcreteCommand>> {
+  - idLivro
+  - matricula
+  + executar(receptor) : ComprovanteDeRenovacao
+}
+class "FachadaDeCirculacao" as C22171723 <<Receiver>> {
+  + solicitarReserva(...)
+  + renovarEmprestimo(...)
+}
+C50627656 ..> C10746004 : cria
+C50627656 ..> C3381721 : submeter
+C3381721 --> C97194156
+C97194156 ..> C62212414
+C56233184 --|> C62212414
+C10746004 --|> C62212414
+C97194156 --> C22171723 : receptor
+C62212414 ..> C22171723
+@enduml

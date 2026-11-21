@@ -1,0 +1,22 @@
+@startuml S03_seteReaisNosBancos
+title R3 — R$ 7,00 convertido por banco (Adapter)
+autonumber
+participant "TratadorDeMulta" as P0
+participant "AdaptadorBancoA" as P1
+participant "BancoA" as P2
+participant "AdaptadorBancoB" as P3
+participant "BancoB" as P4
+note across: Instalação com banco A
+P0 -> P1 : registrarCobranca(valor = 7.00, cpf)
+P1 -> P2 : incluirTitulo(700, "11144477735", 20261203)
+P2 --> P1 : nossoNumero
+P1 --> P0 : Boleto(valor = 7.00)
+note across: Instalação com banco B — mesmo código no TratadorDeMulta
+P0 -> P3 : registrarCobranca(valor = 7.00, cpf)
+P3 -> P4 : emitirBoleto(valor = "7,00", "111.444.777-35")
+P4 --> P3 : idBoleto
+P3 --> P0 : Boleto(valor = 7.00)
+P2 -> P1 : webhook(AvisoDeLiquidacao) ×2
+P1 -> P0 : registrarQuitacao(NotificacaoDePagamento)
+note across: 2ª notificação: RepositorioDeMultas.quitar() — UPDATE ... WHERE quitada = FALSE — devolve false
+@enduml

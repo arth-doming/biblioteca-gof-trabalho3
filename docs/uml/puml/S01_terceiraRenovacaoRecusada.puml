@@ -1,0 +1,23 @@
+@startuml S01_terceiraRenovacaoRecusada
+title R1 — Terceira renovação recusada (State)
+autonumber
+actor "Estudante" as P0
+participant "TratadorDeEmprestimo" as P1
+participant "FachadaDeCirculacao" as P2
+participant "Movimentacao" as P3
+participant "Livro" as P4
+participant "Renovado" as P5
+participant "Emprestimo" as P6
+P0 -> P1 : renovarEmprestimo(idLivro, matricula)
+P1 -> P2 : renovarEmprestimo(idLivro, matricula)  [via executor]
+P2 -> P3 : consultarEmprestimo(idLivro, matricula)
+P3 --> P2 : emprestimo (numRenovacoes = 2)
+P2 -> P4 : renovarEmprestimo(emprestimo)
+P4 -> P5 : renovarEmprestimo(livro, emprestimo)
+P5 -> P6 : getNumRenovacoes()
+P6 --> P5 : 2
+note across: guarda [numRenovacoes < 2] falsa: nada foi alterado
+P5 --> P2 : TransicaoInvalidaException
+note across: UnidadeDeTrabalho não confirma nada; vencimento continua igual
+P2 --> P0 : Recusado: limite de 2 renovações
+@enduml

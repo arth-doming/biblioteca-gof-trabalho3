@@ -1,0 +1,55 @@
+@startuml R02_Strategy
+title R2 — Políticas de multa (Strategy)
+skinparam classAttributeIconSize 0
+hide empty members
+class "OuvinteDeMulta" as C48968373 <<Client>> {
+  + aoDevolver(evento)
+}
+class "TratadorDeMulta" as C42952993 <<Context>> {
+  - configuracao
+  - cobranca : ContratoDeCobranca
+  - multas : RepositorioDeMultas
+  + emitirMulta(idLivro, matricula, vencimento, devolucao) : Optional<Boleto>
+  + diasDeAtraso(vencimento, devolucao) : long
+}
+class "ConfiguracaoAdministrativa" as C63101250 {
+  - vigente : PoliticaDeMulta
+  + registrar(politica)
+  + definirPoliticaVigente(nome)
+  + politicaVigente() : PoliticaDeMulta
+}
+interface "PoliticaDeMulta" as C11756003 <<Strategy>> {
+  + nome() : String
+  + calcular(diasAtraso) : BigDecimal
+}
+class "PoliticaOriginal" as C74240650 <<ConcreteStrategy>> {
+  R$ 1,00 × dias()
+}
+class "PoliticaComTeto" as C39474490 <<ConcreteStrategy>> {
+  TETO = 20.00
+  min(dias × 1,00 ; 20,00)
+}
+class "PoliticaComTolerancia" as C28826412 <<ConcreteStrategy>> {
+  DIAS_TOLERANCIA = 2
+  max(0, dias − 2) × 1,00
+}
+class "Multa" as C77707744 {
+  - valor : BigDecimal
+  - diasAtraso : long
+  - politicaAplicada : String
+  - dataEmissao : LocalDate
+  - quitada : boolean
+  + quitar(data) : boolean
+}
+class "TratadorDeAdministracao" as C2662255 {
+  + definirPoliticaDeMulta(nome)
+}
+C48968373 ..> C42952993 : iMulta
+C42952993 --> C63101250
+C63101250 --> C11756003 : vigente
+C74240650 ..|> C11756003
+C39474490 ..|> C11756003
+C28826412 ..|> C11756003
+C42952993 --> C77707744 : cria; grava via RepositorioDeMultas
+C2662255 ..> C63101250
+@enduml

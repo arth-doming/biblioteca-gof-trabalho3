@@ -1,0 +1,37 @@
+@startuml R10_Composite
+title R10 — Organização hierárquica do acervo (Composite)
+skinparam classAttributeIconSize 0
+hide empty members
+class "OrganizacaoDoAcervo" as C78507010 <<Client>> {
+  + moverLivro(idLivro, destino)
+}
+abstract class "ComponenteAcervo" as C35332008 <<Component>> {
+  - pai : GrupoAcervo
+  + nome() : String
+  + contarLivros() : int
+  + listarLivros() : List<Integer>
+  + raiz() : GrupoAcervo
+}
+class "ItemAcervo" as C57600772 <<Leaf>> {
+  - idLivro : int
+  contarLivros() = 1
+}
+class "GrupoAcervo" as C89996554 <<Composite>> {
+  - nome
+  - tipo : TipoGrupo
+  - filhos : List<ComponenteAcervo>
+  + adicionar(c)  recusa ciclo / livro em 2 grupos
+  + remover(c)
+  + localizarItem(idLivro)
+}
+enum "TipoGrupo" as C64850883 {
+  UNIDADE
+  SECAO
+  SUBSECAO
+}
+C78507010 --> C89996554 : raiz
+C57600772 --|> C35332008
+C89996554 --|> C35332008
+C89996554 o-- C35332008 : filhos 0..*
+C89996554 ..> C64850883
+@enduml

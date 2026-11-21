@@ -1,0 +1,102 @@
+@startuml R01_State
+title R1 — Ciclo de vida do livro (State)
+skinparam classAttributeIconSize 0
+hide empty members
+class "TratadorDeEmprestimo" as C3381721 <<Client>> {
+  solicitarReserva(idLivro, matricula)
+  renovarEmprestimo(idLivro, matricula)
+}
+class "FachadaDeCirculacao" as C22171723 <<Client>> {
+  solicitarReserva(...)
+  efetivarEmprestimo(...)
+  renovarEmprestimo(...)
+  registrarDevolucao(...)
+  inspecionar(idLivro, bomEstado)
+  avaliarReparo(idLivro, reparavel)
+}
+class "Livro" as C4093376 <<Context>> {
+  - idLivro : int
+  - titulo : String
+  - estado : EstadoLivro
+  + solicitarReserva(estudanteCadastrado)
+  + efetivarEmprestimo(reservaDoMesmoEstudante)
+  + renovarEmprestimo(emprestimo)
+  + registrarDevolucao()
+  + inspecionar(bomEstado)
+  + enviarParaReparo()
+  + retornarDoReparo()
+  + avaliarReparo(reparavel)
+  + excluirLivro()
+  ~ mudarPara(estado)
+  + reconstituir(id, titulo, codigo) : Livro
+  + getEstado() : CodigoEstadoLivro
+}
+abstract class "EstadoLivro" as C56017209 <<State>> {
+  + codigo() : CodigoEstadoLivro
+  + solicitarReserva(livro, ok)
+  + efetivarEmprestimo(livro, ok)
+  + renovarEmprestimo(livro, emp)
+  + registrarDevolucao(livro)
+  + inspecionar(livro, bomEstado)
+  + enviarParaReparo(livro)
+  + retornarDoReparo(livro)
+  + avaliarReparo(livro, reparavel)
+  + excluirLivro(livro)
+  # recusar(evento)
+  + de(codigo) : EstadoLivro
+}
+class "Livre" as C2838769 <<ConcreteState>> {
+  solicitarReserva()
+  enviarParaReparo()
+  excluirLivro()
+}
+class "Reservado" as C61917075 <<ConcreteState>> {
+  efetivarEmprestimo()
+}
+class "Emprestado" as C59821947 <<ConcreteState>> {
+  renovarEmprestimo [numRenovacoes = 0]()
+  registrarDevolucao()
+}
+class "Renovado" as C10636574 <<ConcreteState>> {
+  entry(emprestimo)
+  renovarEmprestimo [numRenovacoes < 2]()
+  registrarDevolucao()
+}
+class "Devolvido" as C84831034 <<ConcreteState>> {
+  inspecionar()
+}
+class "Reparando" as C79675966 <<ConcreteState>> {
+  retornarDoReparo()
+  avaliarReparo()
+}
+class "Incinerado" as C57997353 <<ConcreteState>> {
+  entry(livro)
+  excluirLivro()
+}
+enum "CodigoEstadoLivro" as C86425728 {
+  LIVRE
+  RESERVADO
+  EMPRESTADO
+  RENOVADO
+  DEVOLVIDO
+  REPARANDO
+  INCINERADO
+}
+class "Emprestimo" as C69381802 {
+  - dataVencimento : LocalDate
+  - numRenovacoes : int
+  + estenderVencimento(dias)
+}
+C3381721 ..> C22171723
+C22171723 ..> C4093376
+C4093376 --> C56017209 : estado 1
+C2838769 --|> C56017209
+C61917075 --|> C56017209
+C59821947 --|> C56017209
+C10636574 --|> C56017209
+C84831034 --|> C56017209
+C79675966 --|> C56017209
+C57997353 --|> C56017209
+C56017209 ..> C86425728 : persistência
+C10636574 ..> C69381802 : estenderVencimento(30)
+@enduml

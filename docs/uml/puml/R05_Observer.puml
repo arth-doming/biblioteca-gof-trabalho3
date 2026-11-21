@@ -1,0 +1,52 @@
+@startuml R05_Observer
+title R5 — Reações independentes à devolução (Observer)
+skinparam classAttributeIconSize 0
+hide empty members
+class "FachadaDeCirculacao" as C44452540 {
+  + registrarDevolucao(...) — publica após o commit
+}
+class "PublicadorDeDevolucao" as C81186071 <<Subject>> {
+  - ouvintes : List<OuvinteDeDevolucao>
+  + registrar(ouvinte)
+  + remover(ouvinte)
+  + publicar(evento) : ResultadoDaPublicacao
+}
+interface "OuvinteDeDevolucao" as C40549131 <<Observer>> {
+  + nome() : String
+  + aoDevolver(EventoDevolucao)
+}
+class "EventoDevolucao" as C75600771 <<record>> {
+  idDevolucao, idLivro, tituloLivro, matricula,
+  emailEstudante, idAtendente,
+  dataVencimento, dataDevolucao
+  + diasAtraso() : long
+  + emAtraso() : boolean
+}
+class "OuvinteDeInspecao" as C15669495 <<ConcreteObserver>> {
+}
+class "OuvinteDeMulta" as C44031913 <<ConcreteObserver>> {
+}
+class "OuvinteDeIndicadores" as C35318048 <<ConcreteObserver>> {
+}
+class "OuvinteDeEmail" as C18195220 <<ConcreteObserver>> {
+}
+class "FilaDeInspecao" as C88828634 {
+}
+interface "iMulta" as C46748000 {
+}
+class "IndicadoresDeCirculacao" as C57851785 {
+}
+interface "ServicoDeEmail" as C40417915 {
+}
+C44452540 --> C81186071
+C81186071 --> C40549131 : 0..*
+C81186071 ..> C75600771
+C15669495 ..|> C40549131
+C44031913 ..|> C40549131
+C35318048 ..|> C40549131
+C18195220 ..|> C40549131
+C15669495 --> C88828634
+C44031913 --> C46748000
+C35318048 --> C57851785
+C18195220 --> C40417915
+@enduml

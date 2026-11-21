@@ -1,0 +1,56 @@
+@startuml R07_TemplateMethod
+title R7 — Rotina comum para cadastros (Template Method)
+skinparam classAttributeIconSize 0
+hide empty members
+abstract class "RotinaDeCadastro<D,T>" as C47939911 <<AbstractClass>> {
+  - uow : UnidadeDeTrabalho
+  + incluir(dados) : ResultadoDeCadastro<T>  {final}
+  # buscarExistente(dados) : Optional<T>  {abstract}
+  # validar(dados)  {abstract}
+  # verificarPreRequisitos(dados)  «gancho»
+  # criar(dados) : T  {abstract}
+  # armazenar(entidade)  {abstract}
+  # apresentar(entidade, criada)  «gancho»
+  # descrever(entidade)  «gancho»
+}
+class "CadastroDeLivro" as C73121742 <<ConcreteClass>> {
+  buscarExistente, validar, criar, armazenar()
+}
+class "CadastroDePessoa" as C74032039 <<ConcreteClass>> {
+  buscarExistente, validar, criar, armazenar()
+}
+class "CadastroDeEstudante" as C92951507 <<ConcreteClass>> {
+  + verificarPreRequisitos: Pessoa cadastrada()
+}
+class "CadastroDeAtendente" as C51000840 <<ConcreteClass>> {
+  + verificarPreRequisitos: Pessoa cadastrada()
+}
+class "TratadorDeAcervo" as C36302088 {
+}
+class "TratadorDePessoa" as C23926944 {
+}
+class "TratadorDeEstudante" as C46449824 {
+}
+class "TratadorDeAtendente" as C34546286 {
+}
+interface "iLivro" as C43987854 {
+}
+interface "iPessoa" as C71816664 {
+}
+interface "iEstudante" as C80146286 {
+}
+interface "iAtendente" as C6866285 {
+}
+C73121742 --|> C47939911
+C74032039 --|> C47939911
+C92951507 --|> C47939911
+C51000840 --|> C47939911
+C36302088 --> C73121742
+C23926944 --> C74032039
+C46449824 --> C92951507
+C34546286 --> C51000840
+C36302088 ..|> C43987854
+C23926944 ..|> C71816664
+C46449824 ..|> C80146286
+C34546286 ..|> C6866285
+@enduml

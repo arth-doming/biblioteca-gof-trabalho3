@@ -1,0 +1,40 @@
+@startuml R09_Decorator
+title R9 — Consulta com recursos opcionais (Decorator)
+skinparam classAttributeIconSize 0
+hide empty members
+class "TratadorDeAcervo" as C23029227 <<Client>> {
+  + consultarMetadados(idLivro)
+  + buscarPorTitulo(trecho)
+}
+interface "ConsultaAcervo" as C31727163 <<Component>> {
+  + consultarMetadados(idLivro) : Optional<MetadadosLivro>
+  + buscarPorTitulo(trecho) : List<MetadadosLivro>
+}
+class "ConsultaAcervoOriginal" as C28191606 <<ConcreteComponent>> {
+  - acervo : Acervo
+}
+abstract class "DecoradorDeConsulta" as C6297002 <<Decorator>> {
+  # interna : ConsultaAcervo
+}
+class "ConsultaComMedicao" as C38824087 <<ConcreteDecorator>> {
+  - medidor : Medidor
+}
+class "ConsultaComCache" as C45726558 <<ConcreteDecorator>> {
+  - cache : ArmazenamentoDeCache
+  + invalidar(idLivro)
+}
+class "MontadorDeConsulta" as C84780370 {
+  + montar(acervo, cache, medidor)  → Medicao(Cache(Original))
+}
+class "MetadadosLivro" as C86969827 <<record>> {
+  idLivro, titulo  (sem estado)
+}
+C23029227 --> C31727163
+C28191606 ..|> C31727163
+C6297002 ..|> C31727163
+C6297002 --> C31727163 : interna 1
+C38824087 --|> C6297002
+C45726558 --|> C6297002
+C84780370 ..> C31727163 : monta
+C31727163 ..> C86969827
+@enduml

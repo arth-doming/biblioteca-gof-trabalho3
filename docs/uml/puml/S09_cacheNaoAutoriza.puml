@@ -1,0 +1,20 @@
+@startuml S09_cacheNaoAutoriza
+title R9 — Cache não autoriza reserva (Decorator)
+autonumber
+actor "Estudante" as P0
+participant "TratadorDeAcervo" as P1
+participant "ConsultaComMedicao" as P2
+participant "ConsultaComCache" as P3
+participant "TratadorDeEmprestimo" as P4
+participant "FachadaDeCirculacao" as P5
+participant "Acervo" as P6
+P0 -> P1 : consultarMetadados(id)
+P1 -> P2 : consultarMetadados(id)
+P2 -> P3 : consultarMetadados(id)  [mede]
+P3 --> P0 : MetadadosLivro(id, titulo) do cache — sem estado
+P0 -> P4 : solicitarReserva(id, matricula)
+P4 -> P5 : solicitarReserva(...)
+P5 -> P6 : consultarLivro(id)  — estado atual
+P6 --> P5 : Livro [EMPRESTADO]
+P5 --> P0 : Recusado pelo estado
+@enduml

@@ -1,0 +1,23 @@
+@startuml S04_efetivarEmprestimo
+title R4 — Efetivar empréstimo pela fachada (Facade)
+autonumber
+actor "Estudante" as P0
+participant "TratadorDeEmprestimo" as P1
+participant "FachadaDeCirculacao" as P2
+participant "UnidadeDeTrabalho" as P3
+participant "Acervo" as P4
+participant "Movimentacao" as P5
+participant "Livro" as P6
+P0 -> P1 : efetivarEmprestimo(idLivro, matricula)
+P1 -> P2 : efetivarEmprestimo(idLivro, matricula)
+P2 -> P3 : executar(operacao)
+P2 -> P4 : consultarLivro(idLivro)
+P2 -> P5 : consultarReservaAtiva(idLivro)
+P2 -> P6 : efetivarEmprestimo(reservaDoMesmoEstudante)
+note across: Reservado → Emprestado
+P2 -> P5 : remover(reserva)
+P2 -> P5 : adicionar(emprestimo)
+P2 -> P4 : atualizarLivro(livro)
+P3 --> P2 : commit (ou desfaz tudo se algum passo falhar)
+P2 --> P0 : ComprovanteDeEmprestimo
+@enduml

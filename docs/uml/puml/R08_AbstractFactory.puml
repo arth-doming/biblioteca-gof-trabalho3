@@ -1,0 +1,67 @@
+@startuml R08_AbstractFactory
+title R8 — Famílias de acesso aos dados (Abstract Factory)
+skinparam classAttributeIconSize 0
+hide empty members
+class "Sistema" as C87252110 <<Client>> {
+  fabrica = SelecaoDeFabrica.para(perfil, mysql)
+}
+class "SelecaoDeFabrica" as C14787219 {
+  + para(Perfil, ConfiguracaoMySQL) : FabricaDeAcessoADados
+}
+interface "FabricaDeAcessoADados" as C87437713 <<AbstractFactory>> {
+  + unidadeDeTrabalho() : UnidadeDeTrabalho
+  + criarRepositorioDeLivros()
+  + criarRepositorioDeMovimentacao()
+  + criarRepositorioDeRelacionamento()
+  + criarRepositorioDeMultas()
+}
+class "FabricaEmMemoria" as C98516915 <<ConcreteFactory>> {
+}
+class "FabricaMySQL" as C93959761 <<ConcreteFactory>> {
+}
+interface "UnidadeDeTrabalho" as C38220843 <<AbstractProduct>> {
+  + executar(operacao)
+}
+interface "RepositorioDeLivros" as C34858825 <<AbstractProduct>> {
+}
+interface "RepositorioDeMovimentacao" as C24494064 <<AbstractProduct>> {
+}
+interface "RepositorioDeRelacionamento" as C89779475 <<AbstractProduct>> {
+}
+interface "RepositorioDeMultas" as C89561680 <<AbstractProduct>> {
+  + salvar(multa, boleto)
+  + quitar(numero, data) : boolean
+}
+class "UnidadeDeTrabalhoEmMemoria" as C95560061 <<Product>> {
+  log de desfazer()
+}
+class "Repositorio*EmMemoria" as C7040915 <<Product (×4)>> {
+  construtor(UnidadeDeTrabalhoEmMemoria)
+}
+class "UnidadeDeTrabalhoMySQL" as C22521970 <<Product>> {
+  Connection por transação()
+}
+class "Repositorio*MySQL" as C20793706 <<Product (×4)>> {
+  construtor(UnidadeDeTrabalhoMySQL)
+}
+C87252110 ..> C14787219
+C87252110 ..> C87437713
+C98516915 ..|> C87437713
+C93959761 ..|> C87437713
+C95560061 ..|> C38220843
+C22521970 ..|> C38220843
+C7040915 ..|> C34858825
+C20793706 ..|> C34858825
+C7040915 ..|> C24494064
+C20793706 ..|> C24494064
+C7040915 ..|> C89779475
+C20793706 ..|> C89779475
+C7040915 ..|> C89561680
+C20793706 ..|> C89561680
+C98516915 ..> C95560061 : cria
+C98516915 ..> C7040915 : cria
+C93959761 ..> C22521970 : cria
+C93959761 ..> C20793706 : cria
+C7040915 --> C95560061 : mesma uow
+C20793706 --> C22521970 : mesma uow
+@enduml

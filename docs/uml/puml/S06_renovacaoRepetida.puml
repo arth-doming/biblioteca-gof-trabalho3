@@ -1,0 +1,21 @@
+@startuml S06_renovacaoRepetida
+title R6 — Mesma renovação enviada duas vezes (Command)
+autonumber
+participant "Tela" as P0
+participant "TratadorDeEmprestimo" as P1
+participant "ExecutorDeSolicitacoes" as P2
+participant "SolicitacaoRenovacao" as P3
+participant "FachadaDeCirculacao" as P4
+P0 -> P3 : new(id = REQ-1, autor, criadaEm, idLivro, matricula)
+P0 -> P1 : submeter(solicitacao)
+P1 -> P2 : executar(solicitacao)
+P2 -> P2 : putIfAbsent(REQ-1, tarefa) = null
+P2 -> P3 : executar(receptor)
+P3 -> P4 : renovarEmprestimo(idLivro, matricula)
+P4 --> P0 : ComprovanteDeRenovacao (+30 dias)
+note across: Clique repetido
+P0 -> P1 : submeter(solicitacao)
+P1 -> P2 : executar(solicitacao)
+P2 -> P2 : putIfAbsent(REQ-1, ...) = tarefa existente
+P2 --> P0 : mesmo comprovante (não executa de novo)
+@enduml
