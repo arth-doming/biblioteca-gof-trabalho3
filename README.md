@@ -86,7 +86,8 @@ A tabela requisito → padrão → classes → teste está em [`docs/RASTREABILI
 - `docs/uml/puml/`: os mesmos diagramas em PlantUML, para editar no IntelliJ (plugin PlantUML) ou em plantuml.com.
 - `docs/uml/modelos.py` + `gerar_uml.py`: fonte única dos diagramas; `python3 docs/uml/gerar_uml.py` regera os PDFs (usa Graphviz, `rsvg-convert` e `pypdf`).
 - `docs/INSTRUCOES_ASTAH.md`: passo a passo para atualizar o Astah com os padrões.
-- `modelos/astah/`: arquivos `.asta` dos Trabalhos 01/02. **Pendente da equipe:** acrescentar no Astah os diagramas de classes dos padrões e renomear o enum `EstadoLivro` para `CodigoEstadoLivro` (o nome `EstadoLivro` agora é a classe abstrata do State), depois exportar em PDF.
+- `modelos/astah/`: arquivos `.asta`. `Trabalho03_GoF.asta` é o modelo do Trabalho 3, com os diagramas de classes R01–R10, os diagramas de sequência S01–S10, a máquina de estados corrigida e a visão geral T03; os demais são dos Trabalhos 01/02.
+- `modelos/Modelos_Astah_Trabalho3.pdf`: exportação do Astah (22 páginas); `Modelos_Astah_Trabalho3_A4.pdf` é a mesma exportação em A4.
 
 ## Decisões que valem para a arguição
 
