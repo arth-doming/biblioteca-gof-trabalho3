@@ -121,4 +121,4 @@ A tabela requisito → padrão → classes → teste está em [`docs/RASTREABILI
 |---|---|
 | Claude (Anthropic), modelo Claude Opus 5.5, no app Claude | Geração da estrutura do projeto, código de todos os pacotes, testes JUnit, CLI, scripts dos diagramas UML, este README, `docs/RASTREABILIDADE.md` e o rascunho de `REGISTRO_LLM.md` |
 
-O que foi pedido, aceito, corrigido ou descartado está em [`REGISTRO_LLM.md`](REGISTRO_LLM.md). Todo o código precisa ser revisado e explicado pela equipe antes da entrega.
+O que foi pedido aceito, corrigido ou descartado está em [`REGISTRO_LLM.md`](REGISTRO_LLM.md). Todo o código precisa ser revisado e explicado pela equipe antes da entrega.
